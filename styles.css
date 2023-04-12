@@ -167,7 +167,10 @@ section {
     transition: 0.2s ease-in-out
 }
 
-
+.done {
+    text-decoration: line-through;
+    color: gray
+}
 
 /* input[type="radio"],
 input[type="checkbox"] {
