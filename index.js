@@ -121,3 +121,28 @@ function DisplayTodos () {
 
 	})
 }
+
+let darkMode = document.getElementById('dark-mode')
+darkMode.addEventListener('click', toggleColor)
+var r = document.querySelector(':root');
+
+function toggleColor () {
+
+	if(darkMode.innerText === "TOGGLE DARK MODE"){
+		r.style.setProperty('--secondary','#03DAC5' )
+		r.style.setProperty('--light','#121212' )
+		r.style.setProperty('--danger', '#CF6679')
+		r.style.setProperty('--dark', '#FFF')
+		r.style.setProperty('--white', '#272727')
+		r.style.setProperty('--secondary-light', '#BB86FC')
+		darkMode.innerText = "TOGGLE LIGHT MODE"
+	} else if (darkMode.innerText === "TOGGLE LIGHT MODE") {
+		r.style.setProperty('--secondary','#84a59d' )
+		r.style.setProperty('--light','#f7ede2' )
+		r.style.setProperty('--danger', '#f6bd60')
+		r.style.setProperty('--dark', '#33302f')
+		r.style.setProperty('--white', '#FFF')
+		r.style.setProperty('--secondary-light', '#f5cac3')
+		darkMode.innerText = "TOGGLE DARK MODE"
+	}
+}
