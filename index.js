@@ -1,93 +1,123 @@
-// window.addEventListener('load', () => {
-//     todos = JSON.parse(localStorage.getItem('todos')) || [];
-//     const inputName = document.querySelector('#name');
-//     const newTodo = document.querySelector('#new-todo');
-//     const username = localStorage.getItem('username') || '';
-//     inputName.value = username;
-//     inputName.addEventListener('change', e => {
-//         localStorage.setItem('username', e.target.value);
-//     })
+window.addEventListener('load', () => {
+	todos = JSON.parse(localStorage.getItem('todos')) || [];
+	const nameInput = document.querySelector('#name');
+	const newTodoForm = document.querySelector('#new-todo');
 
-//     newTodo.addEventListener('submit', e => {
-// 		e.preventDefault();
+	const username = localStorage.getItem('username') || '';
 
-// 		const todo = {
-// 			content: e.target.elements.content.value,
-// 			category: e.target.elements.category.value,
-// 			done: false,
-// 			createdAt: new Date().getTime()
-// 		}
+	nameInput.value = username;
 
-// 		todos.push(todo);
+	nameInput.addEventListener('change', (e) => {
+		localStorage.setItem('username', e.target.value);
+	})
 
-// 		localStorage.setItem('todos', JSON.stringify(todos));
+	newTodoForm.addEventListener('submit', e => {
+		e.preventDefault();
 
+		const todo = {
+			content: e.target.elements.content.value,
+			category: e.target.elements.category.value,
+			done: false,
+			createdAt: new Date().getTime()
+		}
 
-// 		e.target.reset();
-      
-//         showTodos()
-//     })
-//     showTodos()
-// })
+		todos.push(todo);
 
+		localStorage.setItem('todos', JSON.stringify(todos));
 
-let todosContent = []
+		e.target.reset();
 
-const newTodo = document.getElementById('new-todo')
-let tasks = document.getElementById('todo-list')
+		DisplayTodos()
+	})
 
-newTodo.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const newTodoData = new FormData(newTodo);
-    const obj = Object.fromEntries(newTodoData);
-    
-    const json = JSON.stringify(obj);
-    localStorage.setItem('form', json);
-
-    renderTasks()
-
-    for (let eachTask of todosContent) {
-        tasks.innerHTML += `<div class="todo-item">
-        <div class="left-todo-content">
-            <label class="item-container">
-                <input type="checkbox">
-            </label>
-            <div class="todo-text">
-                <input type="text" value="${eachTask}" readonly class="">
-            </div>
-        </div>
-        <div class="action">
-            <button class="edit">Edit</button>
-            <button class="delete">Delete</button>
-        </div>
-    </div>`
-    }
-    
-    newTodo.reset()
+	DisplayTodos()
 })
 
-function renderTasks () {
-    const json = localStorage.getItem('form');
-    const obj = JSON.parse(json);
-    const content = obj.content
-    todosContent.push(content)
+function DisplayTodos () {
+	const todoList = document.querySelector('#todo-list');
+	todoList.innerHTML = "";
+
+	todos.forEach(todo => {
+		const todoItem = document.createElement('div');
+		todoItem.classList.add('todo-item');
+
+        const leftTodoContent = document.createElement('div');
+        leftTodoContent.classList.add('left-todo-content');
+
+		const label = document.createElement('label');
+        label.classList.add('item-container');
+		const input = document.createElement('input');
+		input.type = 'checkbox';
+        input.checked = todo.done;
+
+		const content = document.createElement('div');
+		content.classList.add('todo-text');
+        content.innerHTML = `<input type="text" value="${todo.content}" readonly>`;
+		const span = document.createElement('span');
+
+        const actions = document.createElement('div');
+        actions.classList.add('action');
+		const edit = document.createElement('button');
+        edit.classList.add('edit');
+        edit.innerHTML = 'Edit';
+		const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete');
+        deleteButton.innerHTML = 'Delete';
+
+		
+		
+		if (todo.category == 'personal') {
+			leftTodoContent.classList.add('personal');
+		} else {
+			leftTodoContent.classList.add('work');
+		}
+		
+		todoItem.appendChild(leftTodoContent)
+        todoItem.appendChild(actions)
+        leftTodoContent.appendChild(label)
+        label.appendChild(input)
+        leftTodoContent.appendChild(content)
+		content.appendChild(span)
+        actions.appendChild(edit)
+		actions.appendChild(deleteButton)
+        todoList.appendChild(todoItem)
+
+		if (todo.done) {
+			content.classList.add('done');
+		}
+		
+		input.addEventListener('change', (e) => {
+			todo.done = e.target.checked;
+			localStorage.setItem('todos', JSON.stringify(todos));
+
+			if (todo.done) {
+				content.classList.add('done');
+			} else {
+				content.classList.remove('done');
+			}
+
+			DisplayTodos()
+
+		})
+
+		edit.addEventListener('click', (e) => {
+			const input = content.querySelector('input');
+			input.removeAttribute('readonly');
+			input.focus();
+			input.addEventListener('blur', (e) => {
+				input.setAttribute('readonly', true);
+				todo.content = e.target.value;
+				localStorage.setItem('todos', JSON.stringify(todos));
+				DisplayTodos()
+
+			})
+		})
+
+		deleteButton.addEventListener('click', (e) => {
+			todos = todos.filter(t => t != todo);
+			localStorage.setItem('todos', JSON.stringify(todos));
+			DisplayTodos()
+		})
+
+	})
 }
-
-
-
-
-
-                {/* <div class="todo-item">
-                    <div class="left-todo-content">
-                        <label class="item-container">
-                            <input type="checkbox">
-                        </label>
-                        <div class="todo-text">
-                            <input type="text" value="Make a video" readonly class="">
-                        </div>
-                    </div>
-                    <div class="action">
-                        <button class="edit">Edit</button>
-                        <button class="delete">Delete</button>
-                    </div>
-                </div> */}

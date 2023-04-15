@@ -173,6 +173,21 @@ section {
     color: gray
 }
 
+
+.personal {
+    background-color: var(--secondary-light);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+	box-shadow: var(--shadow);
+}
+
+.work {
+    background-color: var(--primary);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+	box-shadow: var(--shadow);
+}
+
 /* input[type="radio"],
 input[type="checkbox"] {
 	display: none;
